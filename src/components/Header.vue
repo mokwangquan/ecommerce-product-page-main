@@ -1,11 +1,11 @@
 <template>
   <div id="header" :class="{'is-mobile':isMobile}">
     <el-row type="flex" justify="start">
-      <span v-if="isMobile" @click="openDrawer = true" class="menu-icon">
+      <div v-if="isMobile" @click="openDrawer = true" class="menu-icon">
         <img src="@/assets/images/icon-menu.svg" alt="menu-icon">
-      </span>
+      </div>
 
-      <span class="logo">sneakers</span>
+      <div class="logo">sneakers</div>
 
       <el-menu v-if="!isMobile"
         class="menu" 
@@ -30,14 +30,14 @@
         </div>
       </el-drawer>
 
-      <span class="cart" @click="openCart = true">
+      <div class="cart" @click="openCart = true">
         <el-badge :value="amount" :hidden="amount==0">
           <img src="@/assets/images/icon-cart.svg" alt="cart-icon">
         </el-badge>
-      </span>
-      <span class="avatar" :class="{'is-mobile':isMobile}">
+      </div>
+      <div class="avatar" :class="{'is-mobile':isMobile}">
         <img src="@/assets/images/image-avatar.png" alt="avatar">
-      </span>
+      </div>
     </el-row>
     <el-divider v-if="!isMobile"></el-divider>
 
@@ -115,7 +115,7 @@ export default {
   &.is-mobile { 
     margin: 0 1rem; 
   }
-  >.el-row >span {
+  >.el-row >div {
     cursor: pointer;
     &.menu-icon {
       margin: auto 1rem;

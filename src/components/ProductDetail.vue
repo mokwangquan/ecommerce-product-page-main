@@ -3,7 +3,7 @@
     <template v-if="!isMobile">
     <div class="images-container">
       <div class="image-display">
-        <img :src="getDisplayingImageUrl()" alt="image-display">
+        <img @click="openOverlay" :src="getDisplayingImage()" alt="image-display">
       </div>
       <el-row class="image-thumbnails" type="flex" justify="space-between">
         <div class="image-wrapper" :class="{'is-active' : displayingImageId == 1}"
@@ -29,15 +29,13 @@
     <template v-else> 
     <div class="images-container is-mobile">
       <div class="image-display">
-        <img :src="getDisplayingImageUrl()" alt="image-display">
+        <img :src="getDisplayingImage()" alt="image-display">
         <div class="action">
-          <div class="circle previous">
-            <img @click="changeImage(-1)"
-              src="@/assets/images/icon-previous.svg" alt="icon-previous">
+          <div class="circle previous" @click="changeImage(-1)">
+            <img src="@/assets/images/icon-previous.svg" alt="icon-previous">
           </div>
-          <div class="circle next">
-            <img class="" @click="changeImage(1)"
-              src="@/assets/images/icon-next.svg" alt="icon-next">
+          <div class="circle next" @click="changeImage(1)">
+            <img src="@/assets/images/icon-next.svg" alt="icon-next">
           </div>
         </div>
       </div>
@@ -70,12 +68,25 @@
         </el-button>
       </div>
     </div>
+
+    <!-- Overlay images -->
+    <OverlayImages
+      v-if="showOverlay"
+      @close="showOverlay = false"
+      :clickedId="this.displayingImageId"/>
   </div>
 </template>
 
 <script>
+import { bus } from '@/main.js'
+import OverlayImages from '@/components/OverlayImages.vue'
+import { getImage } from '@/utils/helpers'
+
 export default {
   name: 'ProductDetail',
+  components: {
+    OverlayImages
+  },
   props: {
     isMobile: {
       type: Boolean,
@@ -86,19 +97,18 @@ export default {
     return {
       displayingImageId: 1,
       amount: 0,
+
+      showOverlay: false,
     }
   },
   methods: {
-    getDisplayingImageUrl() {
-      let images = require.context('@/assets/images/')
-      return images(`./image-product-${this.displayingImageId}.jpg`)
-    },
+    getDisplayingImage() { return getImage(this.displayingImageId) },
     changeAmount(amount) {
       if (this.amount == 0 && amount < 0 ) return
       this.amount += amount
     },
     addToCart() {
-      this.$emit('addToCart', this.amount)
+      bus.$emit('addToCart', this.amount)
     },
     changeImage(value) {
       this.displayingImageId += value
@@ -106,6 +116,10 @@ export default {
         this.displayingImageId = this.displayingImageId == 5 ? 1 : 4
       }
     },
+    openOverlay() {
+      if (this.isMobile) return
+      this.showOverlay = true
+    }
   },
 }
 </script>
@@ -123,6 +137,7 @@ export default {
     display: inline-block;
     >.image-display {
       >img {
+        cursor: pointer;
         width: 20rem;
         height: 20rem;
         border-radius: 1rem;

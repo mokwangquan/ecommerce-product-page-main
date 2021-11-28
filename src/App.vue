@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <Header class="header-component" 
-      :amountChanged="amount"
+    <Header class="header-component"
       :isMobile="isMobile"/>
-    <ProductDetail 
-      @addToCart="(amount) => this.amount = amount"
+    <ProductDetail
       :isMobile="isMobile"/>
   </div>
 </template>
@@ -22,7 +20,6 @@ export default {
   data() {
     return {
       isMobile: false,
-      amount: 0,
     }
   },
   methods: {

@@ -62,7 +62,7 @@
           </div>
           <img @click="amount=0" class="delete-icon" src="@/assets/images/icon-delete.svg" alt="delete-icon">
         </el-row>
-        <el-button @click="amount=0;openCart=false" class="button-checkout">Checkout</el-button>
+        <el-button @click="handleCheckout" class="button-checkout">Checkout</el-button>
       </template>
       <p v-else class="detail-empty">
         Your cart is empty
@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import { bus } from '@/main.js'
 export default {
   name: 'Header',
   props: {
@@ -91,11 +92,19 @@ export default {
       amount: 0,
     }
   },
-  watch: {
-    amountChanged(newValue) {
-      this.amount = newValue
+  methods: {
+    handleCheckout() {
+      this.$message({
+        type: 'success',
+        message: 'You have checked out with total of $' + this.amount*125
+      })
+      this.amount=0
+      this.openCart=false
     }
-  }
+  },
+  mounted() {
+    bus.$on('addToCart', (amount) => this.amount += amount)
+  },
 }
 </script>
 
